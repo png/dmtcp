@@ -37,8 +37,8 @@
 #define COORD_NAMESERVICE
 
 #ifndef CKPT_SIGNAL
-# define CKPT_SIGNAL SIGUSR2
-#endif // ifndef CKPT_SIGNAL
+#define CKPT_SIGNAL SIGUSR2
+#endif  // ifndef CKPT_SIGNAL
 
 // This macro (LIBC...) is also defined in ../jalib/jassert.cpp and should
 // always be kept in sync with that.
@@ -83,6 +83,7 @@
 #define ENV_VAR_CHECKPOINT_DIR      "DMTCP_CHECKPOINT_DIR"
 #define ENV_VAR_TMPDIR              "DMTCP_TMPDIR"
 #define ENV_VAR_CKPT_OPEN_FILES     "DMTCP_CKPT_OPEN_FILES"
+#define ENV_VAR_CKPT_THEN_KILL      "DMTCP_CKPT_THEN_KILL"
 #define ENV_VAR_ALLOW_OVERWRITE_WITH_CKPTED_FILES \
                                     "DMTCP_ALLOW_OVERWRITE_WITH_CKPTED_FILES"
 #define ENV_VAR_PLUGIN              "DMTCP_PLUGIN"
@@ -107,9 +108,9 @@
 #ifdef HBICT_DELTACOMP
   # define ENV_VAR_DELTACOMPRESSION "DMTCP_HBICT"
   # define ENV_DELTACOMPRESSION     ENV_VAR_DELTACOMPRESSION
-#else // ifdef HBICT_DELTACOMP
+#else  // ifdef HBICT_DELTACOMP
   # define ENV_DELTACOMPRESSION
-#endif // ifdef HBICT_DELTACOMP
+#endif  // ifdef HBICT_DELTACOMP
 
 #define ENV_VAR_FORKED_CKPT             "DMTCP_FORKED_CHECKPOINT"
 #define ENV_VAR_SIGCKPT                 "DMTCP_SIGCKPT"
@@ -131,6 +132,7 @@
   ENV_VAR_CHECKPOINT_DIR,             \
   ENV_VAR_TMPDIR,                     \
   ENV_VAR_CKPT_OPEN_FILES,            \
+  ENV_VAR_CKPT_THEN_KILL,             \
   ENV_VAR_QUIET,                      \
   ENV_VAR_STDERR_PATH,                \
   ENV_VAR_COMPRESSION,                \
@@ -154,7 +156,7 @@
 
 #if LINUX_VERSION_CODE <= KERNEL_VERSION(2, 6, 9)
 # define user_desc modify_ldt_ldt_s
-#endif // if LINUX_VERSION_CODE <= KERNEL_VERSION(2, 6, 9)
+#endif  // if LINUX_VERSION_CODE <= KERNEL_VERSION(2, 6, 9)
 
 #define DMTCP_VERSION_AND_COPYRIGHT_INFO                            \
   BINARY_NAME " (DMTCP) " PACKAGE_VERSION "\n"                      \
@@ -167,4 +169,4 @@
 #define HELP_AND_CONTACT_INFO               \
   "Report bugs to: " PACKAGE_BUGREPORT "\n" \
   "DMTCP home page: <" PACKAGE_URL ">\n"
-#endif // ifndef CONSTANTS_H
+#endif  // ifndef CONSTANTS_H
