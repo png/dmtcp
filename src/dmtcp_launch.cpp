@@ -142,6 +142,9 @@ static const char *theUsage =
   "              Directory to store temp files (default: $TMDPIR or /tmp)\n"
   "              (Behavior is undefined if two launched processes specify\n"
   "               different tmpdirs.)\n"
+  "  -x, --exit-after-ckpt (environment variable DMTCP_CKPT_THEN_KILL)\n"
+  "              Kill peer processes of computation after first checkpoint\n"
+  "              is created. Will only work if new coordinator is created.\n"
   "  -q, --quiet (or set environment variable DMTCP_QUIET = 0, 1, or 2)\n"
   "              Skip NOTE messages; if given twice, also skip WARNINGs\n"
   "  --coord-logfile PATH (environment variable DMTCP_COORD_LOG_FILENAME\n"
@@ -346,6 +349,9 @@ processArgs(int *orig_argc, char ***orig_argv)
       shift;
     } else if (s == "--explicit-srun") {
       explicitSrun = true;
+      shift;
+    } else if (s == "-x" || s == "--exit-after-ckpt") {
+      setenv(ENV_VAR_CKPT_THEN_KILL, "1", 1);
       shift;
     } else if (s == "--with-plugin") {
       setenv(ENV_VAR_PLUGIN, argv[1], 1);
