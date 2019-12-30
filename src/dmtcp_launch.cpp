@@ -93,7 +93,7 @@ static const char *theUsage =
 #ifdef HBICT_DELTACOMP
   "  --hbict, --no-hbict, (environment variable DMTCP_HBICT=[01])\n"
   "              Enable/disable compression of checkpoint images (default: 1)\n"
-#endif // ifdef HBICT_DELTACOMP
+#endif  // ifdef HBICT_DELTACOMP
   "  --ckptdir PATH (environment variable DMTCP_CHECKPOINT_DIR)\n"
   "              Directory to store checkpoint images\n"
   "              (default: curr dir at launch)\n"
@@ -185,9 +185,9 @@ static bool enableTimerPlugin = true;
 
 #ifdef UNIQUE_CHECKPOINT_FILENAMES
 static bool enableUniqueCkptPlugin = true;
-#else // ifdef UNIQUE_CHECKPOINT_FILENAMES
+#else  // ifdef UNIQUE_CHECKPOINT_FILENAMES
 static bool enableUniqueCkptPlugin = false;
-#endif // ifdef UNIQUE_CHECKPOINT_FILENAMES
+#endif  // ifdef UNIQUE_CHECKPOINT_FILENAMES
 
 // This is the base library.
 static bool enableLibDMTCP = true;
@@ -203,7 +203,7 @@ struct PluginInfo {
 static struct PluginInfo pluginInfo[] = {               // Default value
   { &enablePtracePlugin, "libdmtcp_ptrace.so" },        // Disabled
   { &enableModifyEnvPlugin, "libdmtcp_modify-env.so" },  // Disabled
-  { &enableUniqueCkptPlugin, "libdmtcp_unique-ckpt.so" }, // Disabled
+  { &enableUniqueCkptPlugin, "libdmtcp_unique-ckpt.so" },  // Disabled
   { &enableIB2TcpPlugin, "libdmtcp_ib2tcp.so" },        // Disabled
   { &enableIBPlugin, "libdmtcp_infiniband.so" },        // Disabled
   { &enableRMPlugin, "libdmtcp_batch-queue.so" },       // Disabled
@@ -270,7 +270,7 @@ processArgs(int *orig_argc, char ***orig_argv)
       setenv(ENV_VAR_DELTACOMPRESSION, "0", 1);
       shift;
     }
-#endif // ifdef HBICT_DELTACOMP
+#endif  // ifdef HBICT_DELTACOMP
     else if (s == "--new-coordinator") {
       allowedModes = COORD_NEW;
       shift;
@@ -287,7 +287,7 @@ processArgs(int *orig_argc, char ***orig_argv)
       setenv(ENV_VAR_COORD_LOGFILE, argv[1], 1);
       shift; shift;
     } else if (argv[0][0] == '-' && argv[0][1] == 'i' &&
-               isdigit(argv[0][2])) { // else if -i5, for example
+               isdigit(argv[0][2])) {  // else if -i5, for example
       setenv(ENV_VAR_CKPT_INTR, argv[0] + 2, 1);
       shift;
     } else if (argc > 1 &&
@@ -299,7 +299,7 @@ processArgs(int *orig_argc, char ***orig_argv)
       coord_port = jalib::StringToInt(argv[1]);
       shift; shift;
     } else if (argv[0][0] == '-' && argv[0][1] == 'p' &&
-               isdigit(argv[0][2])) { // else if -p0, for example
+               isdigit(argv[0][2])) {  // else if -p0, for example
       coord_port = jalib::StringToInt(&argv[0][2]);
       shift;
     } else if (argc > 1 && s == "--port-file") {
@@ -396,7 +396,7 @@ processArgs(int *orig_argc, char ***orig_argv)
         " still in beta testing.\n*** Gzip not yet supported.\n\n";
     }
   }
-#endif // if __aarch64__
+#endif  // if __aarch64__
   if (coord_port == UNINITIALIZED_PORT &&
       (getenv(ENV_VAR_NAME_PORT) == NULL ||
        getenv(ENV_VAR_NAME_PORT)[0]== '\0') &&
@@ -441,7 +441,7 @@ main(int argc, char **argv)
    * from enable-forked... to disable-...
    */
   setenv(ENV_VAR_FORKED_CKPT, "1", 1);
-#endif // ifdef FORKED_CHECKPOINTING
+#endif  // ifdef FORKED_CHECKPOINTING
 
   // This code will go away when zero-mapped pages are implemented in MTCP.
   struct rlimit rlim;
@@ -598,7 +598,7 @@ main(int argc, char **argv)
     str[strlen(str) - strlen("/lib/dmtcp/32")] = '\0';
     installDir = str;
   }
-#endif // if defined(__i386__) || defined(__arm__)
+#endif  // if defined(__i386__) || defined(__arm__)
 
   /* We need to initialize SharedData here to make sure that it is
    * initialized with the correct coordinator timestamp.  The coordinator
@@ -659,8 +659,8 @@ testMatlab(const char *filename)
     JASSERT_STDERR << theMatlabWarning;
     return -1;
   }
-# endif // if __GNUC__ == 4 && __GNUC_MINOR__ > 1
-#endif // ifdef __GNUC__
+# endif  // if __GNUC__ == 4 && __GNUC_MINOR__ > 1
+#endif  // ifdef __GNUC__
   return 0;
 }
 
@@ -684,7 +684,7 @@ testJava(char **argv)
   if (strcmp(argv[0], "java") == 0) {
     while (*(++argv) != NULL) {
       if (strncmp(*argv, "-Xmx", sizeof("-Xmx") - 1) == 0) {
-        return 0; // The user called java with -Xmx.  No need for warning.
+        return 0;  // The user called java with -Xmx.  No need for warning.
       }
     }
   }
@@ -806,7 +806,7 @@ setLDPreloadLibs(bool is32bitElf)
     preloadLibs = Util::getPath("libdmtcp.so");
 #if defined(__x86_64__) || defined(__aarch64__)
     preloadLibs32 = Util::getPath("libdmtcp.so", true);
-#endif // if defined(__x86_64__) || defined(__aarch64__)
+#endif  // if defined(__x86_64__) || defined(__aarch64__)
   } else {
     for (size_t i = 0; i < numLibs; i++) {
       struct PluginInfo *p = &pluginInfo[i];
@@ -816,7 +816,7 @@ setLDPreloadLibs(bool is32bitElf)
 #if defined(__x86_64__) || defined(__aarch64__)
         preloadLibs32 += Util::getPath(p->lib, true);
         preloadLibs32 += ":";
-#endif // if defined(__x86_64__) || defined(__aarch64__)
+#endif  // if defined(__x86_64__) || defined(__aarch64__)
       }
     }
   }
@@ -824,7 +824,7 @@ setLDPreloadLibs(bool is32bitElf)
   setenv(ENV_VAR_HIJACK_LIBS, preloadLibs.c_str(), 1);
 #if defined(__x86_64__) || defined(__aarch64__)
   setenv(ENV_VAR_HIJACK_LIBS_M32, preloadLibs32.c_str(), 1);
-#endif // if defined(__x86_64__) || defined(__aarch64__)
+#endif  // if defined(__x86_64__) || defined(__aarch64__)
 
   // If dmtcp_launch was called with user LD_PRELOAD, and if
   // dmtcp_launch survived the experience, then pass it back to user.
@@ -833,7 +833,7 @@ setLDPreloadLibs(bool is32bitElf)
     preloadLibs = preloadLibs + ":" + getenv("LD_PRELOAD");
 #if defined(__x86_64__) || defined(__aarch64__)
     preloadLibs32 = preloadLibs32 + ":" + getenv("LD_PRELOAD");
-#endif // if defined(__x86_64__) || defined(__aarch64__)
+#endif  // if defined(__x86_64__) || defined(__aarch64__)
   }
 
   setenv("LD_PRELOAD", preloadLibs.c_str(), 1);
@@ -849,7 +849,7 @@ setLDPreloadLibs(bool is32bitElf)
           "  ./configure && make clean && make -j && make install\n");
     setenv("LD_PRELOAD", preloadLibs32.c_str(), 1);
   }
-#endif // if defined(__x86_64__) || defined(__aarch64__)
+#endif  // if defined(__x86_64__) || defined(__aarch64__)
   JTRACE("getting value of LD_PRELOAD")
     (getenv("LD_PRELOAD")) (preloadLibs) (preloadLibs32);
 }
