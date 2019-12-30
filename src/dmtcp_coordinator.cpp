@@ -115,7 +115,7 @@ static const char *theUsage =
   "      Directory to store temporary files (default: env var TMDPIR or /tmp)\n"
   "  --exit-on-last\n"
   "      Exit automatically when last client disconnects\n"
-  "  --exit-after-ckpt\n"
+  "  --exit-after-ckpt (environment variable DMTCP_CKPT_THEN_KILL)\n"
   "      Kill peer processes of computation after first checkpoint is created\n"
   "  --daemon\n"
   "      Run silently in the background after detaching from the parent "
@@ -435,7 +435,7 @@ DmtcpCoordinator::printList()
       << "]@" << clients[i]->hostname()
 #ifdef PRINT_REMOTE_IP
       << "(" << clients[i]->ip() << ")"
-#endif // ifdef PRINT_REMOTE_IP
+#endif  // ifdef PRINT_REMOTE_IP
       << ", " << clients[i]->identity()
       << ", " << clients[i]->state()
       << ", " << clients[i]->barrier()
@@ -755,8 +755,8 @@ DmtcpCoordinator::initializeComputation()
 
   // drop current computation group to 0
   compId = UniquePid(0, 0, 0);
-  curTimeStamp = 0; // Drop timestamp to 0
-  numPeers = -1; // Drop number of peers to unknown
+  curTimeStamp = 0;  // Drop timestamp to 0
+  numPeers = -1;  // Drop number of peers to unknown
   blockUntilDone = false;
   exitAfterCkptOnce = false;
   workersAtCurrentBarrier = 0;
@@ -1240,7 +1240,7 @@ calcLocalAddr()
 
   memset(&localhostIPAddr, 0, sizeof localhostIPAddr);
   memset(&hints, 0, sizeof(struct addrinfo));
-  hints.ai_family = AF_UNSPEC; // accept AF_INET and AF_INET6
+  hints.ai_family = AF_UNSPEC;  // accept AF_INET and AF_INET6
   hints.ai_socktype = SOCK_STREAM;
   hints.ai_flags = AI_PASSIVE;
   hints.ai_protocol = 0;
@@ -1295,9 +1295,9 @@ calcLocalAddr()
         if ( strncmp( name, hostname, sizeof hostname ) == 0 ) {
           success = true;
           memcpy(&localhostIPAddr, &s->sin_addr, sizeof s->sin_addr);
-          break; // Stop here.  We found a matching hostname.
+          break;  // Stop here.  We found a matching hostname.
         }
-        if (!at_least_one_match) { // Prefer the first match over later ones.
+        if (!at_least_one_match) {  // Prefer the first match over later ones.
           at_least_one_match = true;
           memcpy(&localhostIPAddr, &s->sin_addr, sizeof s->sin_addr);
         }
@@ -1376,7 +1376,7 @@ DmtcpCoordinator::eventLoop(bool daemon)
     ev.events = EPOLLIN;
 #ifdef EPOLLRDHUP
     ev.events |= EPOLLRDHUP;
-#endif // ifdef EPOLLRDHUP
+#endif  // ifdef EPOLLRDHUP
     ev.data.ptr = (void *)STDIN_FILENO;
     JASSERT(epoll_ctl(epollFd, EPOLL_CTL_ADD, STDIN_FILENO, &ev) != -1)
       (JASSERT_ERRNO);
@@ -1407,7 +1407,7 @@ DmtcpCoordinator::eventLoop(bool daemon)
       if ((events[n].events & EPOLLHUP) ||
 #ifdef EPOLLRDHUP
           (events[n].events & EPOLLRDHUP) ||
-#endif // ifdef EPOLLRDHUP
+#endif  // ifdef EPOLLRDHUP
           (events[n].events & EPOLLERR)) {
         JASSERT(ptr != listenSock);
         if (ptr == (void *)STDIN_FILENO) {
@@ -1447,9 +1447,9 @@ DmtcpCoordinator::addDataSocket(CoordClient *client)
 
 #ifdef EPOLLRDHUP
   ev.events = EPOLLIN | EPOLLRDHUP;
-#else // ifdef EPOLLRDHUP
+#else  // ifdef EPOLLRDHUP
   ev.events = EPOLLIN;
-#endif // ifdef EPOLLRDHUP
+#endif  // ifdef EPOLLRDHUP
   ev.data.ptr = client;
   JASSERT(epoll_ctl(epollFd, EPOLL_CTL_ADD, client->sock().sockfd(), &ev) != -1)
     (JASSERT_ERRNO);
@@ -1488,6 +1488,9 @@ main(int argc, char **argv)
     useLogFile = true;
     logFilename = getenv(ENV_VAR_COORD_LOGFILE);
   }
+  if(getenv(ENV_VAR_CKPT_THEN_KILL)) {
+    exitAfterCkpt = true;
+  }
 
   shift;
   while (argc > 0) {
@@ -1519,7 +1522,7 @@ main(int argc, char **argv)
       setenv(ENV_VAR_CKPT_INTR, argv[1], 1);
       shift; shift;
     } else if (argv[0][0] == '-' && argv[0][1] == 'i' &&
-               isdigit(argv[0][2])) { // else if -i5, for example
+               isdigit(argv[0][2])) {  // else if -i5, for example
       setenv(ENV_VAR_CKPT_INTR, argv[0] + 2, 1);
       shift;
     } else if (argc > 1 &&
@@ -1527,7 +1530,7 @@ main(int argc, char **argv)
       thePort = jalib::StringToInt(argv[1]);
       shift; shift;
     } else if (argv[0][0] == '-' && argv[0][1] == 'p' &&
-               isdigit(argv[0][2])) { // else if -p0, for example
+               isdigit(argv[0][2])) {  // else if -p0, for example
       thePort = jalib::StringToInt(argv[0] + 2);
       shift;
     } else if (argc > 1 && s == "--port-file") {
@@ -1539,7 +1542,7 @@ main(int argc, char **argv)
     } else if (argc > 1 && (s == "-t" || s == "--tmpdir")) {
       tmpdir_arg = argv[1];
       shift; shift;
-    } else if (argc == 1) { // last arg can be port
+    } else if (argc == 1) {  // last arg can be port
       char *endptr;
       long x = strtol(argv[0], &endptr, 10);
       if ((ssize_t)strlen(argv[0]) != endptr - argv[0]) {
@@ -1549,7 +1552,7 @@ main(int argc, char **argv)
         thePort = jalib::StringToInt(argv[0]);
         shift;
       }
-      x++, x--; // to suppress unused variable warning
+      x++, x--;  // to suppress unused variable warning
     } else {
       fprintf(stderr, theUsage, DEFAULT_PORT);
       return 1;
@@ -1619,7 +1622,7 @@ main(int argc, char **argv)
     JASSERT_STDERR <<
       "\n    Exit on last client: " << exitOnLast << "\n";
   }
-#else // if 0
+#else  // if 0
   if (!quiet) {
     fprintf(stderr, "dmtcp_coordinator starting..."
                     "\n    Host: %s (%s)"
@@ -1633,7 +1636,7 @@ main(int argc, char **argv)
     }
     fprintf(stderr, "\n    Exit on last client: %d\n", exitOnLast);
   }
-#endif // if 0
+#endif  // if 0
 
   if (daemon) {
     if (!quiet) {
