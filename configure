@@ -656,8 +656,8 @@ HAS_VIM
 HAS_ZSH
 HAS_TCSH
 HAS_DASH
-HAS_PYTHON
 HAS_PYTHON3
+HAS_PYTHON
 HAS_PS
 HAS_EPOLL_CREATE1
 HAS_CMA
@@ -670,6 +670,7 @@ ARM_HOST_TRUE
 X86_64_HOST
 X86_64_HOST_FALSE
 X86_64_HOST_TRUE
+NO_SYMLINK
 MULTILIB
 CONFIG_MULTILIB_FALSE
 CONFIG_MULTILIB_TRUE
@@ -823,6 +824,7 @@ enable_pthread_mutex_wrappers
 enable_m32
 enable_multilib
 enable_static_libstdcxx
+enable_no_symlink
 with_mpich
 '
       ac_precious_vars='build_alias
@@ -1523,6 +1525,8 @@ Optional Features:
                           Compile $CXX with -static-libstdc++. This allows
                           DMTCP executables compiled on later distro to run
                           correctly on earlier distros.)
+  --enable-no-symlink     Disable the creation of the dmtcp-restart.sh
+                          symbolic link
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -6465,6 +6469,23 @@ See \`config.log' for more details" "$LINENO" 5; }
     { $as_echo "$as_me:${as_lineno-$LINENO}: --enable-static-libstdcxx: thread-safe \"mkdir -p\": $MKDIR_P" >&5
 $as_echo "$as_me: --enable-static-libstdcxx: thread-safe \"mkdir -p\": $MKDIR_P" >&6;}
   fi
+fi
+
+# Check whether --enable-no_symlink was given.
+if test "${enable_no_symlink+set}" = set; then :
+  enableval=$enable_no_symlink; use_no_symlink=$enableval
+else
+  use_no_symlink=no
+fi
+
+
+if test "$use_no_symlink" = "yes"; then
+
+$as_echo "#define NO_SYMLINK 1" >>confdefs.h
+
+else
+  NO_SYMLINK=no
+
 fi
 
 #AC_ARG_ENABLE([allocator],

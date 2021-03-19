@@ -93,6 +93,9 @@
 /* Verbose trace output and log files in $DMTCP_TMPDIR */
 #undef LOGGING
 
+/* Do not create symbolic link for restart */
+#undef NO_SYMLINK
+
 /* Name of package */
 #undef PACKAGE
 

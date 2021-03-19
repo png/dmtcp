@@ -418,6 +418,19 @@ if test "$use_static_libstdcxx" = "yes"; then
   fi
 fi
 
+AC_ARG_ENABLE([no_symlink],
+            [AS_HELP_STRING([--enable-no-symlink],
+                            [Disable the creation of the dmtcp-restart.sh
+                              symbolic link])],
+            [use_no_symlink=$enableval],
+            [use_no_symlink=no])
+
+if test "$use_no_symlink" = "yes"; then
+  AC_DEFINE([NO_SYMLINK],[1],[Do not create symbolic link for restart])
+else
+  AC_SUBST([NO_SYMLINK], [no])
+fi
+
 #AC_ARG_ENABLE([allocator],
 #            [AS_HELP_STRING([--enable-allocator],
 #                            [cause DMTCP to use a custom allocator based on mmap

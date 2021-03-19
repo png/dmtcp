@@ -600,6 +600,7 @@ writeScript(const string &ckptDir,
     JASSERT(::stat(uniqueFilename.c_str(), &buf) == 0);
     JASSERT(chmod(uniqueFilename.c_str(), buf.st_mode | S_IXUSR) == 0);
 
+    #ifndef NO_SYMLINK
     // Create a symlink from
     // dmtcp_restart_script.sh -> dmtcp_restart_script_<curCompId>.sh
     unlink(filename.c_str());
@@ -615,6 +616,7 @@ writeScript(const string &ckptDir,
     JASSERT(uniq_fname_str[PATH_MAX-1] == '\0'); // orig str less than PATH_MAX     // FIXME:  Handle error case of symlink()
     JWARNING(symlinkat(basename(uniq_fname_str), dirfd, filename.c_str()) == 0)
             (JASSERT_ERRNO);
+    #endif
     JASSERT(close(dirfd) == 0);
   }
   return uniqueFilename;
